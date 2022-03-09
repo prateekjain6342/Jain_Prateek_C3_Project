@@ -21,7 +21,6 @@ class RestaurantTest {
 
     //ORDER VALUE
     //>ORDER_VALUE<
-    //Failing Test Case
     @Test
     public void order_value_should_be_the_sum_of_the_items_prices_selected(){
         mockMenu = restaurant.getMenu();
