@@ -1,12 +1,16 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class RestaurantTest {
     Restaurant restaurant;
+    List<Item> mockMenu = new ArrayList<Item>();
+
+    @BeforeEach
     public void restaurantCreation(){
         LocalTime openTime = LocalTime.parse("10:30:00");
         LocalTime closeTime = LocalTime.parse("22:00:00");
@@ -15,18 +19,35 @@ class RestaurantTest {
         restaurant.addToMenu("Vegetable lasagne", 269);
     }
 
+    //ORDER VALUE
+    //>ORDER_VALUE<
+    //Failing Test Case
+    @Test
+    public void order_value_should_be_the_sum_of_the_items_prices_selected(){
+        mockMenu = restaurant.getMenu();
+        assertEquals(388,restaurant.getOrderValue(mockMenu));
+    }
+
+    @Test
+    public void order_value_should_reduce_cumulative_total_when_an_item_removed(){
+        mockMenu = restaurant.getMenu();
+        int orderValue = restaurant.getOrderValue(mockMenu);
+        int itemRemove = mockMenu.get(0).getPrice();
+        mockMenu.remove(0);
+        assertEquals(orderValue-itemRemove,restaurant.getOrderValue(mockMenu));
+    }
+    //<ORDER_VALUE>
+
     //>>>>>>>>>>>>>>>>>>>>>>>>>OPEN/CLOSED<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     //-------FOR THE 2 TESTS BELOW, YOU MAY USE THE CONCEPT OF MOCKING, IF YOU RUN INTO ANY TROUBLE
     @Test
     public void is_restaurant_open_should_return_true_if_time_is_between_opening_and_closing_time(){
-        restaurantCreation();
         restaurant.setClosingTime(LocalTime.now().plusMinutes(10));
         assertTrue(restaurant.isRestaurantOpen());
     }
 
     @Test
     public void is_restaurant_open_should_return_false_if_time_is_outside_opening_and_closing_time(){
-        restaurantCreation();
         restaurant.setClosingTime(LocalTime.now().minusMinutes(10));
         assertFalse(restaurant.isRestaurantOpen());
 
